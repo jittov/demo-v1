@@ -38,19 +38,18 @@ class RAGGenerator:
         self,
         embedding_generator: EmbeddingGenerator,
         vector_db: MilvusVectorDB,
-        openai_api_key: str,
-        model_name: str = "gpt-4o-mini",
-        temperature: float = 0.1,
-        max_tokens: int = 2000
+        google_api_key: str,
+        model_name: str = "gemini/gemini-2.0-flash-exp",
+        temperature: float = 0.1
     ):
         self.embedding_generator = embedding_generator
         self.vector_db = vector_db
         
+        # Initializing Gemini using the crewai LLM wrapper
         self.llm = LLM(
-            model=f"openai/{model_name}",
+            model=model_name,
             temperature=temperature,
-            max_tokens=max_tokens,
-            api_key=openai_api_key
+            api_key=google_api_key
         )
         
         self.model_name = model_name
@@ -60,7 +59,7 @@ class RAGGenerator:
         self,
         query: str,
         max_chunks: int = 8,
-        max_context_chars: int = 4000,
+        max_context_chars: int = 12000,  # Increased for Gemini's larger context window
         top_k: int = 10,
     ) -> RAGResult:
 
@@ -166,9 +165,9 @@ class RAGGenerator:
 
 CITATION REQUIREMENTS:
 1. For each factual claim in your answer, include the citation reference number in square brackets [1], [2], etc.
-2. Only use information from the provided context - do not add external knowledge
-3. If you cannot find relevant information in the context, say so clearly
-4. Be precise and accurate in your citations
+2. Only use information from the provided context - do not add external knowledge.
+3. If you cannot find relevant information in the context, say so clearly.
+4. Be precise and accurate in your citations.
 5. When multiple sources support the same point, list all relevant citations like this [1], [2], [3].
 
 CONTEXT (with citation references):
@@ -182,7 +181,7 @@ Please provide a comprehensive answer with proper citations. Make sure every fac
     
     def generate_summary(
         self,
-        max_chunks: int = 15,
+        max_chunks: int = 20, # Gemini can handle more chunks
         summary_length: str = "medium"
     ) -> RAGResult:
         try:
@@ -202,7 +201,7 @@ Please provide a comprehensive answer with proper citations. Make sure every fac
                 )
             
             context, sources_info = self._format_context_with_citations(
-                search_results, max_chunks, 6000
+                search_results, max_chunks, 15000
             )
             
             length_instructions = {
@@ -214,10 +213,10 @@ Please provide a comprehensive answer with proper citations. Make sure every fac
             summary_prompt = f"""You are tasked with creating a summary of the provided document content. Follow these guidelines:
 
 1. {length_instructions.get(summary_length, length_instructions['medium'])}
-2. Include citations [1], [2], etc. for all factual claims
-3. Organize information logically with clear topics
-4. Focus on the most important and relevant information
-5. Maintain accuracy and cite sources properly
+2. Include citations [1], [2], etc. for all factual claims.
+3. Organize information logically with clear topics.
+4. Focus on the most important and relevant information.
+5. Maintain accuracy and cite sources properly.
 
 DOCUMENT CONTENT (with citation references):
 {context}
@@ -249,9 +248,10 @@ if __name__ == "__main__":
     from src.embeddings.embedding_generator import EmbeddingGenerator
     from src.vector_database.milvus_vector_db import MilvusVectorDB
     
-    openai_key = os.getenv("OPENAI_API_KEY")
-    if not openai_key:
-        print("Please set OPENAI_API_KEY environment variable")
+    # Updated to use GOOGLE_API_KEY
+    google_key = os.getenv("GOOGLE_API_KEY")
+    if not google_key:
+        print("Please set GOOGLE_API_KEY environment variable")
         exit(1)
     
     try:
@@ -260,8 +260,8 @@ if __name__ == "__main__":
         rag_generator = RAGGenerator(
             embedding_generator=embedding_gen,
             vector_db=vector_db,
-            openai_api_key=openai_key,
-            model_name="gpt-4o-mini",
+            google_api_key=google_key,
+            model_name="gemini/gemini-2.0-flash-exp",
             temperature=0.1
         )
         
