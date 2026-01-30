@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 
 class NotebookLMPipeline:
     def __init__(self):
-        self.openai_key = os.getenv("OPENAI_API_KEY")
+        self.google_key = os.getenv("GOOGLE_API_KEY")
         self.assemblyai_key = os.getenv("ASSEMBLYAI_API_KEY")
         self.firecrawl_key = os.getenv("FIRECRAWL_API_KEY")
         self.zep_key = os.getenv("ZEP_API_KEY")
         
-        if not self.openai_key:
-            raise ValueError("OPENAI_API_KEY not found in environment")
+        if not self.google_key:
+            raise ValueError("GOOGLE_API_KEY not found in environment")
         
         logger.info("Initializing NotebookLM Pipeline...")
         
@@ -32,8 +32,8 @@ class NotebookLMPipeline:
         self.rag_generator = RAGGenerator(
             embedding_generator=self.embedding_generator,
             vector_db=self.vector_db,
-            openai_api_key=self.openai_key,
-            model_name="gpt-4o-mini",
+            google_api_key=self.google_key,
+            model_name="gemini/gemini-3-flash-preview",
             temperature=0.1
         )
         
@@ -229,7 +229,7 @@ def test_pipeline():
 
 
 if __name__ == "__main__":
-    required_keys = ["OPENAI_API_KEY"]
+    required_keys = ["GOOGLE_API_KEY"]
     optional_keys = ["ASSEMBLYAI_API_KEY", "FIRECRAWL_API_KEY", "ZEP_API_KEY"]
     
     logger.info("Environment Check:")
@@ -241,8 +241,8 @@ if __name__ == "__main__":
         status = "✅" if os.getenv(key) else "⚠️  Optional"
         logger.info(f"  {key}: {status}")
     
-    if not os.getenv("OPENAI_API_KEY"):
-        logger.error("Missing required OPENAI_API_KEY - cannot proceed")
+    if not os.getenv("GOOGLE_API_KEY"):
+        logger.error("Missing required GOOGLE_API_KEY - cannot proceed")
         exit(1)
     
     logger.info("")

@@ -33,11 +33,11 @@ class PodcastScript:
 
 
 class PodcastScriptGenerator:
-    def __init__(self, openai_api_key: str, model_name: str = "gpt-4o-mini"):
+    def __init__(self, google_api_key: str, model_name: str = "gemini-3-flash-preview"):
         self.llm = LLM(
-            model=f"openai/{model_name}",
+            model=f"gemini/{model_name}",
             temperature=0.7,
-            max_tokens=4000
+            api_key=google_api_key
         )
         self.doc_processor = DocumentProcessor()
         logger.info(f"Podcast script generator initialized with {model_name}")
@@ -254,12 +254,12 @@ Generate an engaging {target_duration} podcast script now:"""
 if __name__ == "__main__":
     import os
     
-    openai_key = os.getenv("OPENAI_API_KEY")
-    if not openai_key:
-        print("Please set OPENAI_API_KEY environment variable")
+    google_key = os.getenv("GOOGLE_API_KEY")
+    if not google_key:
+        print("Please set GOOGLE_API_KEY environment variable")
         exit(1)
     
-    generator = PodcastScriptGenerator(openai_key)
+    generator = PodcastScriptGenerator(google_key)
     
     try:
         sample_text = """

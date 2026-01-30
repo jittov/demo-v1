@@ -39,7 +39,7 @@ class RAGGenerator:
         embedding_generator: EmbeddingGenerator,
         vector_db: MilvusVectorDB,
         google_api_key: str,
-        model_name: str = "gemini/gemini-2.0-flash-exp",
+        model_name: str = "gemini/gemini-3-flash-preview",
         temperature: float = 0.1
     ):
         self.embedding_generator = embedding_generator
@@ -261,7 +261,7 @@ if __name__ == "__main__":
             embedding_generator=embedding_gen,
             vector_db=vector_db,
             google_api_key=google_key,
-            model_name="gemini/gemini-2.0-flash-exp",
+            model_name="gemini/gemini-3-flash-preview",
             temperature=0.1
         )
         

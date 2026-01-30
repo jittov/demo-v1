@@ -143,17 +143,33 @@ st.markdown("""
         border-radius: 12px;
         padding: 16px;
         margin: 12px 0;
+        color: #f7fafc !important;
+    }
+    
+    .chat-message * {
+        color: #f7fafc !important;
+    }
+    
+    .chat-message strong {
+        color: #ffffff !important;
+        font-weight: 700;
     }
     
     .user-message {
-        background: #4299e1;
+        background: #3182ce;
         margin-left: 20%;
+        color: #ffffff !important;
     }
     
     .assistant-message {
         background: #2d3748;
         margin-right: 20%;
-        border-left: 3px solid #48bb78;
+        border-left: 4px solid #48bb78;
+        color: #e2e8f0 !important;
+    }
+    
+    .assistant-message * {
+        color: #e2e8f0 !important;
     }
     
     .citation {
