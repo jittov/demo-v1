@@ -50,6 +50,9 @@ NotebookLM Clone is a document-grounded AI assistant that allows you to:
 1. **Install dependencies:**
     First, install `uv` and set up the environment:
     ```bash
+    # to go to ubutnu
+    cd ~
+    
     # moving to ubuntu
     mv demo-v1 ~/
     
